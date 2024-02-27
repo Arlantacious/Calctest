@@ -7,13 +7,13 @@
 typedef struct {
         unsigned int code;
         char* litrl;
-} ERROR;
+} err;
 
-extern ERROR SUCCESS;
-extern ERROR ERROR_ILLEGAL_INPUT;
-extern ERROR ERROR_ILLEGAL_INPUT_EXCEEDS_BUFFER_LIMIT;
-extern ERROR ERROR_STACK_OVERFLOW;
-extern ERROR ERROR_STACK_UNDERFLOW;
-extern ERROR ERROR_CANNOT_DIVIDE_BY_ZERO;
+extern err SUCCESS;
+extern err ERROR_ILLEGAL_INPUT;
+extern err ERROR_ILLEGAL_INPUT_EXCEEDS_BUFFER_LIMIT;
+extern err ERROR_STACK_OVERFLOW;
+extern err ERROR_STACK_UNDERFLOW;
+extern err ERROR_CANNOT_DIVIDE_BY_ZERO;
 
 #endif
