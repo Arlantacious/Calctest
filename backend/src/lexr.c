@@ -1,7 +1,7 @@
 #include "../headers/lexr.h"
 #include <ctype.h>
 
-void _remv_whitspc(char* in) {
+static void _remv_whitspc(char* in) {
 
         char* src = in;
         char* dst = in;
