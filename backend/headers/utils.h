@@ -2,17 +2,28 @@
 #define UTILS_H
 
 typedef enum {
+        DOUBLE,
         ADDITION,
         SUBTRACTION,
         MULTIPLICATION,
         DIVISION,
         MODULOS,
         EXPONENTIATION,
-} OPERATIONS;
+        LEFT_PARENTHESIS,
+        RIGHT_PARENTHESIS,
+} TOKEN_TYPE;
 
-struct stack {
+typedef struct {
+        TOKEN_TYPE type;
+        union {
+                char* literl;
+                double val;
+        };
+} TOKEN;
+
+typedef struct {
         unsigned int top;
-        void* arr;
-};
+        TOKEN* arr;
+} STACK;
 
 #endif

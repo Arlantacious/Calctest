@@ -3,6 +3,6 @@
 
 #include "../../globals/headers/globals.h"
 
-err calcualte();
+ERR calcult();
 
 #endif

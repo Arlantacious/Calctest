@@ -1,19 +1,19 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#define INPUT_BUFFER_SIZE 99
-#define NUM_OPERATIONS
+#define BUFFER_SIZE 99
+#define NUM_OPERATIONS 6
 
 typedef struct {
         unsigned int code;
         char* litrl;
-} err;
+} ERR;
 
-extern err SUCCESS;
-extern err ERROR_ILLEGAL_INPUT;
-extern err ERROR_ILLEGAL_INPUT_EXCEEDS_BUFFER_LIMIT;
-extern err ERROR_STACK_OVERFLOW;
-extern err ERROR_STACK_UNDERFLOW;
-extern err ERROR_CANNOT_DIVIDE_BY_ZERO;
+extern ERR SUCCESS;
+extern ERR ERROR_ILLEGAL_INPUT;
+extern ERR ERROR_ILLEGAL_INPUT_EXCEEDS_BUFFER_LIMIT;
+extern ERR ERROR_STACK_OVERFLOW;
+extern ERR ERROR_STACK_UNDERFLOW;
+extern ERR ERROR_CANNOT_DIVIDE_BY_ZERO;
 
 #endif
