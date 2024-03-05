@@ -2,7 +2,6 @@
 #define GLOBALS_H
 
 #define BUFFER_SIZE 99
-#define NUM_OPERATIONS 6
 
 typedef struct {
         unsigned int code;

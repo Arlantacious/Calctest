@@ -1,28 +1,28 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <stdlib.h>
+
 typedef enum {
-        DOUBLE,
         ADDITION,
         SUBTRACTION,
         MULTIPLICATION,
         DIVISION,
         MODULOS,
         EXPONENTIATION,
+        VALUE,
         LEFT_PARENTHESIS,
         RIGHT_PARENTHESIS,
+        PERIOD
 } TOKEN_TYPE;
 
 typedef struct {
         TOKEN_TYPE type;
-        union {
-                char* literl;
-                double val;
-        };
+        double val;
 } TOKEN;
 
 typedef struct {
-        unsigned int top;
+        size_t top;
         TOKEN* arr;
 } STACK;
 
