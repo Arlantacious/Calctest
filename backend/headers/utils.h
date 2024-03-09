@@ -17,11 +17,6 @@ typedef enum {
 } TokenType;
 
 typedef struct {
-        int8_t code;
-        char* litrl;
-} Error;
-
-typedef struct {
         size_t len;
         TokenType type;
         double val;
@@ -32,14 +27,22 @@ typedef struct {
         Token* arr;
 } Stack;
 
-extern Error SUCCESS;
-extern Error ERROR_ILLEGAL_INPUT;
-extern Error ERROR_STACK_OVERFLOW;
-extern Error ERROR_STACK_UNDERFLOW;
-extern Error ERROR_CANNOT_DIVIDE_BY_ZERO;
 
 void push(Stack* stack, Token token);
 void push_stack(Stack* base_stack, Stack* stack);
 Token pop(Stack* stack);
+
+typedef enum {
+        SUCCESS,
+        ERROR_ILLEGAL_INPUT,
+        ERROR_CANNOT_DIVIDE_BY_ZERO,
+} Error;
+
+static const char* error_code[] = {
+        [SUCCESS] = "SUCCESS",
+        [ERROR_ILLEGAL_INPUT] = "ERROR_ILLEGAL_INPUT",
+        [ERROR_CANNOT_DIVIDE_BY_ZERO] = "ERROR_CANNOT_DIVIDE_BY_ZERO"
+};
+
 
 #endif

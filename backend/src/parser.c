@@ -84,7 +84,8 @@ static Error _postfix_notation(Token* token) {
 
 Error parse(Token token) {
         Error reorder_rpn_err = _postfix_notation(&token);
-        if (strcmp(reorder_rpn_err.litrl, "SUCCESS")) {
+
+        if (reorder_rpn_err != SUCCESS) {
                 return reorder_rpn_err;
         }
 
