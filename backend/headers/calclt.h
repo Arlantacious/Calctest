@@ -1,8 +1,8 @@
 #ifndef CALCLT_H
 #define CALCLT_H
 
-#include "../../globals/headers/globals.h"
+#include "utils.h"
 
-ERR calcult();
+Error calculate();
 
 #endif

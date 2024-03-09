@@ -1,7 +1,5 @@
 #include "../headers/calclt.h"
-#include "../../globals/headers/globals.h"
+#include "../headers/utils.h"
 
-ERR calcult() {
-        return SUCCESS; 
-}
+Error calculate() { return SUCCESS; }
 

@@ -4,26 +4,42 @@
 #include <stdlib.h>
 
 typedef enum {
-        ADDITION,
-        SUBTRACTION,
-        MULTIPLICATION,
-        DIVISION,
-        MODULOS,
-        EXPONENTIATION,
-        VALUE,
-        LEFT_PARENTHESIS,
-        RIGHT_PARENTHESIS,
-        PERIOD
-} TOKEN_TYPE;
+        END,
+        VAL,
+        ADD,
+        SUB,
+        MLT,
+        DIV,
+        MOD,
+        EXP,
+        LPN,
+        RPN,
+} TokenType;
 
 typedef struct {
-        TOKEN_TYPE type;
+        int8_t code;
+        char* litrl;
+} Error;
+
+typedef struct {
+        size_t len;
+        TokenType type;
         double val;
-} TOKEN;
+} Token;
 
 typedef struct {
         size_t top;
-        TOKEN* arr;
-} STACK;
+        Token* arr;
+} Stack;
+
+extern Error SUCCESS;
+extern Error ERROR_ILLEGAL_INPUT;
+extern Error ERROR_STACK_OVERFLOW;
+extern Error ERROR_STACK_UNDERFLOW;
+extern Error ERROR_CANNOT_DIVIDE_BY_ZERO;
+
+void push(Stack* stack, Token token);
+void push_stack(Stack* base_stack, Stack* stack);
+Token pop(Stack* stack);
 
 #endif
