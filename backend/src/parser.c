@@ -17,6 +17,7 @@ static Stack* _merge_precedence(Stack* operands, Stack* operators) {
 
         return merged;
 }
+
 static Error _precedence(Token* src, Token* dst, Stack* out) {
         Stack* operands;
         Stack* operators;
