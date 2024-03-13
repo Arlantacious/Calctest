@@ -1,93 +1,87 @@
-#include "../headers/parser.h"
-#include "../headers/utils.h"
-
+#include "parser.h"
+#include "../utils/stack.h"
+#include "../utils/token.h"
 #include <stdlib.h>
 #include <string.h>
 
-static Stack* _merge_precedence(Stack* operands, Stack* operators) {
-        Stack* merged;
-
-        for (size_t i = operands->top; i > 0; i--) {
-                push(merged, pop(operands));
-        }
-
-        for (size_t i = operators->top; i > 0; ++i) {
-                push(merged, pop(operators));
-        }
-
-        return merged;
-}
-
-static Error _precedence(Token* src, Token* dst, Stack* out) {
-        Stack* operands;
-        Stack* operators;
-        size_t match;
-
-        while (match != 0 && src->type != END)  {
+static ERROR _precedence(Token* src, Stack* dst) {
+        Stack* operands; //Stack to temporarily store operand tokens.
+        Stack* operators; //Stack to temporarily store operator tokens.
+        size_t match; //Unsigned integer to store the difference in parenthesis matching.
+        //Traverse through tokens until a match or return an error.
+        for (Token* token = src; match != 0 && token != NULL; token++) {
                 switch (src->type) {
-                        case END:
-                        case VAL:
+                        case TOKEN_VAL:
                                 push(operands, *src);
                                 break;
-                        case ADD:
-                        case SUB:
-                        case MLT:
-                        case DIV:
-                        case MOD:
-                        case EXP:
+                        case TOKEN_ADD:
+                        case TOKEN_SUB:
+                        case TOKEN_MLT:
+                        case TOKEN_DIV:
+                        case TOKEN_MOD:
+                        case TOKEN_EXP:
                                 push(operators, *src);
                                 break;
-                        case LPN:
+                        case TOKEN_LPN:
                                 match++;
-                        case RPN:
+                        case TOKEN_RPN:
                                 match--;
                                 break;
                 }
                 if (match != 0)
-                        return ERROR_ILLEGAL_INPUT;
+                        return ERROR_MISMATCHED_PARENTHESIS;
         }
-        push_stack(out, _merge_precedence(operands, operators));
+        Stack* tokens = merge(operands, operators);
+        merge(dst, tokens);
         return SUCCESS;
 }
 
-static void _handle_operand(Token operand, Stack* out) {}
-static void _handle_operator(Token operator, Stack* out) {}
+static inline ERROR _handle_operator(Token operator, Stack* dst) {
+        static Stack operators;
+        if (operators.top > 1) {
+                return ERROR_ILLEGAL_INPUT;
+        }
+        push(&operators, operator);
+        if (peek(dst, 2).type == TOKEN_VAL )
+                push(dst, pop(&operators));
 
-static Error _postfix_notation(Token* token) {
-        Token* precedents;
-        Token* src = token;
-        Token* dst = token;
-        Stack* out;
-        while (src->type != END) {
-                switch (src->type) {
-                        case END:
-                        case VAL:
-                                _handle_operand(*src, out);
+        return SUCCESS;
+
+}
+
+//1 2 + 3 4 * 56 / - 7 + 8 9 * 1011 / -
+static ERROR _postfix_notation(Token* token) {
+        Token* src = token; //Pointer to traverse through tokens. 
+        Stack* dst; //Stack to store ordered tokens.
+        for (Token* token = src; token != NULL; token++) {
+                switch (token->type) {
+                        case TOKEN_VAL:
+                                push(dst, *token);
                                 break;
-                        case ADD:
-                        case SUB:
-                        case MLT:
-                        case DIV:
-                        case MOD:
-                        case EXP:
-                                _handle_operator(*src, out);
+                        case TOKEN_ADD:
+                        case TOKEN_SUB:
+                        case TOKEN_MLT:
+                        case TOKEN_DIV:
+                        case TOKEN_MOD:
+                        case TOKEN_EXP:
+                                _handle_operator(*token, dst);
                                 break;
-                        case LPN:
-                                _precedence(src, dst, out);
+                        case TOKEN_LPN:
+                                _precedence(token, dst);
                                 break;
-                        case RPN:
+                        case TOKEN_RPN:
                                 return ERROR_ILLEGAL_INPUT;
                 }
-                src++;
+                token++;
         }
+
         return SUCCESS;
 }
 
-Error parse(Token token) {
-        Error reorder_rpn_err = _postfix_notation(&token);
-
-        if (reorder_rpn_err != SUCCESS) {
-                return reorder_rpn_err;
+ERROR parse(Token* token) {
+        ERROR postfix_notation_err = _postfix_notation(token);
+        if (postfix_notation_err != SUCCESS) {
+                return postfix_notation_err;
         }
 
         return SUCCESS;

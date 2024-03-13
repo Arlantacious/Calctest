@@ -1,5 +1,13 @@
-#include "../headers/calclt.h"
-#include "../headers/utils.h"
+#include "calculator.h"
+#include "parser.h"
+#include "../utils/error.h"
 
-Error calculate() { return SUCCESS; }
+
+ERROR calculate(Token tokens) {
+        ERROR parse_err = parse(&tokens);
+        if (parse_err != SUCCESS) {
+                return parse_err;
+        }
+        return SUCCESS;
+}
 
