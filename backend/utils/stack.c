@@ -8,11 +8,10 @@ Stack* stack(void) {
 }
 
 void push(Stack* stack, const Token token) {
-        stack->top++;
         if (stack->tokens == NULL) {
                 stack->tokens = (Token*)malloc(sizeof(Token));
         } else {
-                stack->tokens = (Token*)realloc(stack->tokens, (stack->top + 1) * sizeof(Token));
+                stack->tokens = (Token*)realloc(stack->tokens, (++stack->top) * sizeof(Token));
         }
         stack->tokens[stack->top] = token;
 }
@@ -22,7 +21,7 @@ Token pop(Stack* stack) {
         if (stack->top == -1) {
                 free(stack->tokens);
         } else {
-                stack->tokens = (Token*)realloc(stack->tokens, (stack->top + 1) * sizeof(Token));
+                stack->tokens = (Token*)realloc(stack->tokens, (--stack->top) * sizeof(Token));
         }
         return popped_token;
 }
