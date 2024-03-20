@@ -28,6 +28,6 @@ typedef struct {
         size_t len;
 } Token;
 
-inline TOKEN_TYPE  which_type(const Token* token);
+extern TOKEN_TYPE which_type(const Token* token);
 
 #endif
