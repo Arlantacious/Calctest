@@ -1,5 +1,7 @@
 #include "error.h"
 
+#define NUM_ERRORS 3
+
 const char* error_codes[NUM_ERRORS] = {
         [SUCCESS] = "SUCCESS",
         [ERROR_ILLEGAL_INPUT] = "ERROR_ILLEGAL_INPUT",

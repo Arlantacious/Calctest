@@ -1,5 +1,5 @@
-#ifndef CALCLT_H
-#define CALCLT_H
+#ifndef CALCULATOR_H
+#define CALCULATOR_H
 
 #include "../utils/error.h"
 #include "../utils/token.h"

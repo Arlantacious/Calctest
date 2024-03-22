@@ -10,14 +10,11 @@ typedef enum {
         TOKEN_SUB,
         TOKEN_MLT,
         TOKEN_DIV,
-        TOKEN_LPN,
-        TOKEN_RPN,
 } TOKEN_NAME;
 
 typedef enum {
         TOKEN_KIND_OPERAND,
         TOKEN_KIND_OPERATOR,
-        TOKEN_KIND_SPECIAL
 } TOKEN_KIND;
 
 typedef struct {
