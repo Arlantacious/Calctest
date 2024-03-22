@@ -1,76 +1,80 @@
-#include "../utils/stack.h"
-#include "../utils/token.h"
-#include "parser.h"
 #include <stdlib.h>
 #include <string.h>
+#include "parser.h"
+#include "../utils/stack.h"
+#include "../utils/queue.h"
+#include "../utils/token.h"
 /*
- * @params src: raw token array input
+ * @param src: raw token array input
  * @param out: processed tokens output
  * @param err: error code
  */
 static void _precedence(Token* src, Stack* out, ERROR* err) {
-        Stack* operands;
-        Stack* operators;
-        unsigned int match;
-
-        for (Token* src; match > 0 && src != NULL; src++) {
-                if (which_type(src) == TOKEN_TYPE_OPERAND) {
-                        push(operands, *src);
-                } else if (which_type(src) == TOKEN_TYPE_OPERATOR) {
-                        push(operators, *src);
-                } else if (src->type == TOKEN_LPN) {
-                        match++;
-                } else if (src->type == TOKEN_RPN) {
-                        match--;
+    Queue* operands = queue();
+    Queue* operators = queue();
+    unsigned int match;
+    for (Token* token = src; token != NULL; token++) {
+        switch (token->kind) {
+            case TOKEN_KIND_OPERAND:
+                enqueue(operands, *token);
+                break;
+            case TOKEN_KIND_OPERATOR:
+                enqueue(operators, *token);
+                break;
+            case TOKEN_KIND_SPECIAL:
+                if (token->name == TOKEN_LPN) {
+                    match++;
+                } else {
+                    match--;
                 }
         }
+        if (match == 0)
+            break;
+    }
+    Queue* segment;
+    merge(segment, operands);
+    merge(segment, operators);
 
-        if (match > 0)
-                *err = ERROR_MISMATCHED_PARENTHESIS;
-
-        Stack* tokens = merge(operands, operators);
-        merge(out, tokens);
-        *err = SUCCESS;
+    *err = SUCCESS;
 }
 /*
  * @param src: raw token array input
  * @param out: processed tokens output
- * @param err: error code 
+ * @param err: error code
+ * @return: output stack
  */
-static void _rpn(Token* src, Stack* out, ERROR* err) {
-        Stack* operators = stack()
-    ;
-        for (Token* src; src != NULL; src++) {
-                if (which_type(src) == TOKEN_TYPE_OPERAND) {
-                        push(out, *src);
-                } else if (which_type(src) == TOKEN_TYPE_OPERATOR) {
-                    if (operators->top > 1) {
-                        push(out, pop(operators));
-                    }    
-                    push(operators, *src);
-                } else if (src->type == TOKEN_LPN) {
-                        _precedence(src, out, err);
-                } else if (src->type == TOKEN_RPN) {
-                        *err =  ERROR_MISMATCHED_PARENTHESIS;
-                }
-        }
+static Stack* _rpn(Token* src, ERROR* err) {
+    Stack* out = stack();
+    Queue* operators = queue();
+    for (Token* token = src; token != NULL; token++) {
+        if (token->kind  == TOKEN_KIND_OPERAND) {
+            push(out, *token);
+        } else if (token->kind == TOKEN_KIND_OPERATOR) {
+            enqueue(operators, *token);
+            push(out, dequeue(operators));
+        } else if (token->name == TOKEN_LPN) {
+            _precedence(token, out, err);
+        } else if (token->name == TOKEN_RPN) {
+            *err =  ERROR_MISMATCHED_PARENTHESIS;
+        } 
+    }
 
-        free(operators);
-        *err =  SUCCESS;
+    free(operators);
+    *err =  SUCCESS;
+    return out;
 }
 /*
  * @param src: raw token array input
  * @param out: processed tokens output
  * @return ERROR: error code
  */
-ERROR parse(Token src, Stack* out) {
-        ERROR err;
+Stack* parse(Token src, ERROR* err) {
 
-        _rpn(&src, out, &err);
+    Stack* out = _rpn(&src, err);
 
-        if (err != SUCCESS) {
-                return err;
-        }
+    if (err != SUCCESS) {   
+        return out;;
+    }
 
-        return SUCCESS;
+    return out;
 }

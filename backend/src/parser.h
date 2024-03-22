@@ -5,6 +5,6 @@
 #include "../utils/token.h"
 #include "../utils/stack.h"
 
-ERROR parse(Token token, Stack* tokens);
+Stack* parse(Token token, ERROR* err);
 
 #endif
