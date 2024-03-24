@@ -4,19 +4,20 @@
 #include "../utils/stack.h"
 #include "../utils/queue.h"
 #include "../utils/token.h"
-
-static Token _precedence(Queue operators) {}
-
-static Stack* _rpn(Token* src, ERROR* err) {
-    Stack* out = stack();
+static void _precedence() {}
+/*
+ * @param src: raw token array input
+ * @return ERROR: error code
+ */
+static Queue* _rpn(Token* src, ERROR* err) {
+    Queue* out = queue();
     Queue* operators = queue();
-    for (Token* token = src; token != NULL; token++) {
-      
+    for (Token* token = src; token != NULL; token++) {      
         if (token->kind  == TOKEN_KIND_OPERAND) {
-            push(out, *token);
+            enqueue(out, *token);
         } else {
             enqueue(operators, *token);
-            push(out, dequeue(operators));
+            enqueue(out, dequeue(operators));
         } 
     }
 

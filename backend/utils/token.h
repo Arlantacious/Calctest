@@ -21,7 +21,6 @@ typedef struct {
         TOKEN_NAME name;
         TOKEN_KIND kind;
         double val;
-        size_t len;
 } Token;
 
 #endif
