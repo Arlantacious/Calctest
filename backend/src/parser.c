@@ -5,15 +5,21 @@
 #include "../utils/queue.h"
 #include "../utils/token.h"
 static Token _precedence(Queue* operators) {
+    Queue_Node* prev = NULL;
     Queue_Node* current = operators->front;
-    Queue_Node* prev = operators->rear;
     while (current != NULL) {
         if (current->token.prec == TOKEN_PREC_HIGH) {
-            prev->next = current->next;
+            if (prev == NULL) {
+                prev->next = current->next;
+            } else {
+                operators->front = current->next;
+            }
             return current->token;
         }
+        prev = current;
+        current = current->next;
     }
-        return dequeue(operators);
+    return dequeue(operators);
 }
 /*
  * @param src: raw token array input
