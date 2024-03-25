@@ -4,7 +4,8 @@
 #include "../utils/error.h"
 #include "../utils/token.h"
 #include "../utils/stack.h"
+#include "../utils/queue.h"
 
-Stack* parse(Token token, ERROR* err);
+Queue* parse(Token token, ERROR* err);
 
 #endif

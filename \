@@ -13,7 +13,7 @@ static Token _precedence(Queue* operators) {
             return current->token;
         }
     }
-        return dequeue(operators);
+    return dequeue(operators);
 }
 /*
  * @param src: raw token array input
