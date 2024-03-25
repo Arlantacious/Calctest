@@ -4,21 +4,29 @@
 #include "../utils/stack.h"
 #include "../utils/queue.h"
 #include "../utils/token.h"
+/*
+ * @param operators: current operator queue
+ * @return Token: return current token
+ * @return Token: return dequeued token
+ */
 static Token _precedence(Queue* operators) {
-    Queue_Node* prev = NULL;
+    Queue_Node* prev = operators->front;
     Queue_Node* current = operators->front;
+
     while (current != NULL) {
         if (current->token.prec == TOKEN_PREC_HIGH) {
-            if (prev == NULL) {
-                prev->next = current->next;
-            } else {
-                operators->front = current->next;
-            }
+            prev->next  = current->next;
+            free(prev);
+
             return current->token;
         }
         prev = current;
         current = current->next;
     }
+
+    free(prev);
+    free(current);
+
     return dequeue(operators);
 }
 /*
@@ -28,6 +36,7 @@ static Token _precedence(Queue* operators) {
 static Queue* _rpn(Token* src, ERROR* err) {
     Queue* out = queue();
     Queue* operators = queue();
+
     for (Token* token = src; token != NULL; token++) {      
         if (token->kind  == TOKEN_KIND_OPERAND) {
             enqueue(out, *token);
@@ -38,6 +47,7 @@ static Queue* _rpn(Token* src, ERROR* err) {
     }
 
     free(operators);
+
     return out;
 }
 /*
