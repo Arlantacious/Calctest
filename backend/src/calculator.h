@@ -4,6 +4,6 @@
 #include "../utils/error.h"
 #include "../utils/token.h"
 
-ERROR calculate(Token tokens);
+double calculate(char str[], ERROR* err);
 
 #endif

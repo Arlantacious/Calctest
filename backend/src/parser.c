@@ -25,7 +25,6 @@ static Token _precedence(Queue* operators) {
     }
 
     free(prev);
-    free(current);
 
     return dequeue(operators);
 }
@@ -60,8 +59,61 @@ Queue* parse(Token src, ERROR* err) {
     Queue* out = _rpn(&src, err);
 
     if (err != SUCCESS) {   
-        return out;;
+        return out;
     }
 
     return out;
+}
+
+//CONCEPT
+//
+
+float  calculate(Token* tokens) {
+    Stack operands;
+    Stack operators;
+    for (Token* tokens; tokens != NULL; tokens++) {
+        if (tokens->kind == TOKEN_KIND_OPERAND) {
+            push(operands);
+        }
+        if (tokens->kind == TOKEN_KIND_OPERATOR) {
+            push(operators);
+
+        }
+    }
+
+
+static Token prec(Stack* operators) {
+        Stack* prev = operators;
+        Stack* current = operators;
+
+        while (current != NULL) {
+            if (current->name == TOKEN_)
+        }
+    }
+
+static Token __precedence(Queue* operators) {
+    Queue_Node* prev = operators->front;
+    Queue_Node* current = operators->front;
+
+    while (current != NULL) {
+        if (current->token.prec == TOKEN_PREC_HIGH) {
+            prev->next  = current->next;
+            free(prev);
+
+            return current->token;
+        }
+        prev = current;
+        current = current->next;
+    }
+
+    free(prev);
+
+    return dequeue(operators);
+}
+
+
+
+
+
+
 }
