@@ -5,7 +5,10 @@ typedef enum {
         SUCCESS,
         ERROR_ILLEGAL_INPUT,
         ERROR_CANNOT_DIVIDE_BY_ZERO,
-} ERROR;
+} Error;
+
+#define SUCCESS "SUCCESS"
+#define FAILED "FAILED"
 
 #define NUM_ERRORS 3
 extern const char* error_codes[NUM_ERRORS];
