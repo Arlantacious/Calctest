@@ -1,14 +1,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 #include "calculator.h"
 #include "utils.h"
-
-static void _flt(char* ch, struct Stack* operands, char* err) {
+/* @param ch: current char in str
+ * @param out: operands stack
+ * @param err: error message
+*/
+static float _flt(char* ch, struct Stack* out, char* err) {
     char fltstr;
 
     for (char* ch; *ch != '\n'; ch++) {
-        if (isdigit(ch)) {
+        if (isdigit(*ch)) {
             strcat(&fltstr, ch);
             continue;
         } 
@@ -18,14 +22,16 @@ static void _flt(char* ch, struct Stack* operands, char* err) {
                 continue;
             } 
             err = ERR_ILLEGAL_INPUT;
+            return NAN;
         }
     }
-
-    push(operands, atof(&fltstr));
+    return atof(&fltstr);
 }
-
-static void _op(struct Stack* operators, struct Stack* operands) {
-    push(operators, operators->top->data);
+/* @param operators: operator stack
+ * @param out: operands stack
+*/
+static void _op(struct Stack* operators, struct Stack* out, char op) {
+    push(operators, op);
     
     struct Node* current = operators->top;
     size_t depth = 0;
@@ -34,46 +40,47 @@ static void _op(struct Stack* operators, struct Stack* operands) {
         if (current->data == '*' || current->data == '/')
             break;
     }
-
-    if (current == NULL)
-        depth = 0;
     
-    char op = current->data;
-    
-    pop(operators, depth);
+    free(current);
+    push(out, pop(operators, depth));
 
-    float lhs = pop(operands, 1);
-    float rhs = pop(operands, 0);
+}
+
+void _eval(struct Stack* out, char op) {
+    float lflt = pop(out, 1);
+    float rflt = pop(out, 0);
     float val;
 
     switch (op) {
         case '*':
-            val = lhs * rhs;
+            val = lflt * rflt;
         case '/':
-            val = lhs / rhs;
+            val = lflt / rflt;
         case '+':
-            val = lhs + rhs; 
+            val = lflt + rflt; 
         case '-':
-            val = lhs - rhs;
+            val = lflt - rflt;
     }
 
-    push(operands, val);
-    free(current);
+    push(out, val);
 }
 
-float calculate(char str[], char* err) {
-    struct Stack operands;
+float calculatea(char str[], char* err) {
+    struct Stack out;
     struct Stack operators;
-
+    float flt = NAN;
     for (char* ch = str; *ch != '\n'; ch++) {
-        if (isdigit(ch)) {
-            _flt(ch, &operands, err);
+        if (isdigit(*ch)) { //if operand push to out
+            flt = _flt(ch, &out, err);
+            if (err != NULL)
+                return NAN;
+            push(&out, flt);
             continue;
         }
-        _op(&operators, &operands);
+        _op(&operators, &out, *ch);
     }
 
     free(operators.top);
 
-    return operands.top->data;
+    return out.top->data;
 }
