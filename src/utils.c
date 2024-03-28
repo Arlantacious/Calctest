@@ -7,7 +7,7 @@ void push(struct Stack* stack, char ch) {
     stack->top = node;
 }
 
-char pop(struct Stack* stack, unsigned int depth) {
+char* pop(struct Stack* stack, unsigned int depth) {
     struct Node* tmp = stack->top;
     for (size_t depth; depth > 0; depth--) {
         tmp = tmp->prev;
@@ -15,7 +15,7 @@ char pop(struct Stack* stack, unsigned int depth) {
     char data = tmp->data;
     stack->top = tmp->next;
     free(tmp);
-    return data;
+    return &data;
 }
 
 

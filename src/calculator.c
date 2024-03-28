@@ -4,11 +4,12 @@
 #include <math.h>
 #include "calculator.h"
 #include "utils.h"
-/* @param ch: current char in str
- * @param out: operands stack
+/* @param ch: current character in string
+ * @param out: operand stack
  * @param err: error message
+ * @return: substring converted to float 
 */
-static float _flt(char* ch, struct Stack* out, char* err) {
+static char _strflt(char* ch, struct Stack* out, char* err) {
     char fltstr;
 
     for (char* ch; *ch != '\n'; ch++) {
@@ -25,10 +26,11 @@ static float _flt(char* ch, struct Stack* out, char* err) {
             return NAN;
         }
     }
-    return atof(&fltstr);
+    return fltstr;
 }
 /* @param operators: operator stack
- * @param out: operands stack
+ * @param out: operand stack
+ * @param op: operator symbol
 */
 static void _op(struct Stack* operators, struct Stack* out, char op) {
     push(operators, op);
@@ -42,45 +44,68 @@ static void _op(struct Stack* operators, struct Stack* out, char op) {
     }
     
     free(current);
-    push(out, pop(operators, depth));
+    push(out, *pop(operators, depth));
 
 }
-
-void _eval(struct Stack* out, char op) {
-    float lflt = pop(out, 1);
-    float rflt = pop(out, 0);
+/* 
+ * @param out: operand stack
+ * @param op: operator symbol
+ * @return: final value from top of output stack
+*/
+float _eval(struct Stack* out) {
+    float lval;
+    float rval;
     float val;
+    for (struct Node* current = out->top; current != NULL; current = current->prev) {
+        lval = atof(pop(out, 1));
+        rval = atof(pop(out, 0));
 
-    switch (op) {
-        case '*':
-            val = lflt * rflt;
-        case '/':
-            val = lflt / rflt;
-        case '+':
-            val = lflt + rflt; 
-        case '-':
-            val = lflt - rflt;
+        switch (current->data) {
+            case '*':
+                val = lval * rval;
+            case '/':
+                val = lval / rval;
+            case '+':
+                val = lval + rval; 
+            case '-':
+                val = lval - rval;
+        }
+
+        push(out, val);
     }
-
-    push(out, val);
+    return out->top->data;
 }
-
-float calculatea(char str[], char* err) {
-    struct Stack out;
+/* @param str: input string
+ * @param err: error message
+ * @return: string to stack conversion in reverse polish notation
+*/
+struct Stack* _parse(char* str, char* err) {
+    struct Stack* out;
     struct Stack operators;
-    float flt = NAN;
+    char flt;
     for (char* ch = str; *ch != '\n'; ch++) {
         if (isdigit(*ch)) { //if operand push to out
-            flt = _flt(ch, &out, err);
+            flt = _strflt(ch, out, err);
             if (err != NULL)
-                return NAN;
-            push(&out, flt);
+                return NULL;
+            push(out, flt);
             continue;
         }
-        _op(&operators, &out, *ch);
+        _op(&operators, out, *ch);
     }
 
     free(operators.top);
 
-    return out.top->data;
+    return out;
+}
+/* @param str: input string
+ * @param err: error message
+ * @return: final value from top of output stack
+*/
+float calculate(char str, char* err) {
+    struct Stack out = *_parse(&str, err);
+    if (err != NULL)
+        return NAN;
+    float val = _eval(&out);
+    return val;
 }

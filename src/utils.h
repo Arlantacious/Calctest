@@ -15,6 +15,6 @@ struct Stack {
 
 void push(struct Stack* stack, char ch);
 
-char pop(struct Stack* stack, unsigned int depth);
+char* pop(struct Stack* stack, unsigned int depth);
 
 #endif
