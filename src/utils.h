@@ -1,20 +1,28 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#define ERR_ILLEGAL_INPUT "Error: Illegal input!"
+#define SUCCESS ""
+#define ERR_ILLEGAL_INPUT "illegal input"
+
+typedef struct {
+    union {
+        char sig;
+        double val;
+    };
+} Token;
 
 struct Node {
-    char data;
     struct Node* next;
     struct Node* prev;
+    Token data;
 };
 
-struct Stack {
+typedef struct {
     struct Node* top;
-};
+} Stack;
 
-void push(struct Stack* stack, char ch);
+void push(Stack* stack, Token data);
 
-char* pop(struct Stack* stack, unsigned int depth);
+Token* pop(Stack* stack, unsigned int depth);
 
 #endif

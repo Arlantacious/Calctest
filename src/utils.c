@@ -1,21 +1,31 @@
 #include <stdlib.h>
+#include <string.h>
 #include "utils.h"
 
-void push(struct Stack* stack, char ch) {
-    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
-    node->data = ch;
+void push(Stack* stack, Token data) {
+    struct Node* node = malloc(sizeof(struct Node));
+    node->data = data;
     stack->top = node;
 }
 
-char* pop(struct Stack* stack, unsigned int depth) {
+Token* pop(Stack* stack, unsigned int depth) {
+    if (depth == -1) {
+        stack->top = stack->top->prev;
+
+        return &stack->top->data;
+    }
+
     struct Node* tmp = stack->top;
-    for (size_t depth; depth > 0; depth--) {
+
+    for (unsigned int  depth = depth; depth > 0; depth--) {
         tmp = tmp->prev;
     }
-    char data = tmp->data;
+
+    Token* data = &tmp->data;
     stack->top = tmp->next;
     free(tmp);
-    return &data;
+
+    return data;
 }
 
 
