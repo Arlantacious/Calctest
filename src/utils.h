@@ -1,12 +1,14 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#define SUCCESS ""
-#define ERR_ILLEGAL_INPUT "illegal input"
+typedef enum {
+    SUCCESS = 0,
+    ERR_ILLEGAL_INPUT = 1
+} Error;
 
 typedef struct {
     union {
-        char sig;
+        char lit;
         double val;
     };
 } Token;
@@ -23,6 +25,6 @@ typedef struct {
 
 void push(Stack* stack, Token data);
 
-Token* pop(Stack* stack, unsigned int depth);
+Token* pop(Stack* stack, int depth);
 
 #endif

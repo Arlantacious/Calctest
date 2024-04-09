@@ -8,8 +8,8 @@ void push(Stack* stack, Token data) {
     stack->top = node;
 }
 
-Token* pop(Stack* stack, unsigned int depth) {
-    if (depth == -1) {
+Token* pop(Stack* stack, int init_depth) {
+    if (init_depth == -1) {
         stack->top = stack->top->prev;
 
         return &stack->top->data;
@@ -17,7 +17,7 @@ Token* pop(Stack* stack, unsigned int depth) {
 
     struct Node* tmp = stack->top;
 
-    for (unsigned int  depth = depth; depth > 0; depth--) {
+    for (int depth = init_depth; depth > 0; depth--) {
         tmp = tmp->prev;
     }
 

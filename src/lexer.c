@@ -3,49 +3,65 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <math.h>
 #include <stdio.h>
-#include "calculator.h"
+#include <stdbool.h>
 
-static void _try_val(char* ch, double* val,  char* err) {
+static Error _try_val(char* init_c, double* val) {
     char strval;
 
-    for (char* ch = ch; *ch != '\n'; ch++) {
-        if (isdigit(*ch)) {
-            strcat(&strval, ch);
+    for (char* c = init_c; *c != '\n'; c++) {
+        if (isdigit(*c)) {
+            strcat(&strval, c);
             continue;
         } 
-        if (*ch == '.') {
+        if (*c == '.') {
             if (strchr(&strval, '.') == NULL) { 
-                strcat(&strval, ch);
+                strcat(&strval, c);
                 continue;
             } 
-            err = ERR_ILLEGAL_INPUT;
 
-            return;
+            return ERR_ILLEGAL_INPUT;
         }
     }
     *val = strtod(&strval, NULL);
+
+    return SUCCESS;
 }
 
-char lex(char str[], Stack* out) {
-    char* err = SUCCESS;
+static bool _isop(char* ch) {
+    static char operators[] = { '+', '-', '*', '/' };
+
+    if (strpbrk(ch, operators) != NULL)
+
+        return true;
+    
+    return false;
+}
+
+Error lex(char str[], Stack* out) {
+    Error err = SUCCESS;
     Token token;
     double val;
-    char signature;
  
     for (char* ch = str; *ch != '\n'; ch++) {
         if (isdigit(*ch)) {
-            _try_val(ch, &val, err);
-            if (err != NULL)
+            _try_val(ch, &val);
 
-                return *err; 
+            if (err != SUCCESS)
+
+                return err; 
+
             token.val = val;
             push(out, token);
             continue;
         }
+
+        if (_isop(ch)) {
+            token.lit = *ch;
+            push(out, token);
+        }
     }
 
-    return *err;
+    return err;
 }
 
