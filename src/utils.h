@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#define BUF_SIZE 64
+
 typedef enum {
     SUCCESS = 0,
     ERR_ILLEGAL_INPUT = 1
@@ -8,7 +10,7 @@ typedef enum {
 
 typedef struct {
     union {
-        char lit;
+        char op;
         double val;
     };
 } Token;

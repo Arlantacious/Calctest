@@ -11,7 +11,6 @@ void push(Stack* stack, Token data) {
 Token* pop(Stack* stack, int init_depth) {
     if (init_depth == -1) {
         stack->top = stack->top->prev;
-
         return &stack->top->data;
     }
 
@@ -24,7 +23,6 @@ Token* pop(Stack* stack, int init_depth) {
     Token* data = &tmp->data;
     stack->top = tmp->next;
     free(tmp);
-
     return data;
 }
 

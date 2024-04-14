@@ -1,25 +1,29 @@
 #include <stdio.h>
+#include <math.h>
 #include "lexer.h"
 
-void debug(Stack out, Error err) {
-    while (out.top != NULL) {
-        Token* token = pop(&out, -1);
-        printf("VAL: %f LIT: %s\n", token->val, &token->lit);
+static const char* debug_err[] = {
+    [SUCCESS] = "SUCCESS",
+    [ERR_ILLEGAL_INPUT] = "ERR_ILLEGAL_INPUT"
+};
+
+void debug(char out[], Error err) {
+    if (err == ERR_ILLEGAL_INPUT) {
+        printf("ERR: %s\n", debug_err[err]);
+
+        return;
     }
 
-    printf("ERROR: %d", err);
-
+    printf("%s", out); 
 }
 
-int main(int argc, char* argv[]) {
-    
-    if (argc == 2)
-        return 1;
+int main(void) {
+    char str[] = "1+2-3*4/5";
+    char out;
 
-    Stack out;
-
-    Error err = lex(argv[0], &out);
-    debug(out, err);
+    Error err = lex(str, &out);
+ 
+    debug(&out, err);
     
     return 0;
 }

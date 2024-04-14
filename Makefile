@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -Wall -Wextra -std=c99 -O3 -g -fsanitize=address
+CFLAGS = -Wall -Wextra -std=c99 -g -fsanitize=address
 SOURCES = $(shell find . -type f -name '*.c')
 OBJECTS = $(SOURCES:.c=.o)
 

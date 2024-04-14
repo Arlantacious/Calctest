@@ -1,65 +1,75 @@
-#include "lexer.h"
-#include "utils.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <stdio.h>
 #include <stdbool.h>
-
-static Error _try_val(char* init_c, double* val) {
-    char strval;
-
-    for (char* c = init_c; *c != '\n'; c++) {
-        if (isdigit(*c)) {
-            strcat(&strval, c);
-            continue;
-        } 
-        if (*c == '.') {
-            if (strchr(&strval, '.') == NULL) { 
-                strcat(&strval, c);
-                continue;
-            } 
-
-            return ERR_ILLEGAL_INPUT;
-        }
-    }
-    *val = strtod(&strval, NULL);
-
-    return SUCCESS;
-}
-
-static bool _isop(char* ch) {
+#include "lexer.h"
+#include "utils.h"
+// @desc: match the current character with every operator character within [operators]
+// @param: {ch} current character
+// @return: {bool true} {ch} is an operator character within {operators}
+// @return: {bool false} {ch} is not an operator character within {operators}
+static bool isop(char ch) {
     static char operators[] = { '+', '-', '*', '/' };
 
-    if (strpbrk(ch, operators) != NULL)
+    for (size_t i = 0; i < sizeof(operators); i++) {
+        if (ch == operators[i])
+            return true;
+    }
 
-        return true;
-    
     return false;
 }
+//@desc: try to convert the current substring to a value
+//@param: {init_c} initial character in raw string
+//@param: {val} output value
+//@param: {err: ERR_ILLEGAL_INPUT} decimal point comparison failed
+static void try_val(char* ch, char* val, size_t* size, Error* err) {
+    char strval[BUF_SIZE] = "";
+  
+    for (char* i = ch; *i && !isop(*i); i++, size++) {
+        if (isdigit(*i) || *i == '.') { 
+            strncat(strval, i, 0);
+            continue;
+        } 
 
-Error lex(char str[], Stack* out) {
-    Error err = SUCCESS;
-    Token token;
-    double val;
- 
-    for (char* ch = str; *ch != '\n'; ch++) {
-        if (isdigit(*ch)) {
-            _try_val(ch, &val);
-
-            if (err != SUCCESS)
-
-                return err; 
-
-            token.val = val;
-            push(out, token);
+        if (*i == '.' && strchr(strval, '.') == NULL) {
+            strncat(strval, i, 0);
             continue;
         }
 
-        if (_isop(ch)) {
-            token.lit = *ch;
-            push(out, token);
+        *err = ERR_ILLEGAL_INPUT;
+        return;
+    }
+
+    *val = strtod(strval, NULL);
+    *err = SUCCESS;
+}
+// @desc: convert the user input string into a logically arranged token stack
+// @param: {str} raw user input string
+// @param: {out} output stack for final result
+// @return: {Error: SUCCESS} all processes were successful
+// @return: {Error: ERR_ILLEGAL_INPUT} {try_val} failed
+Error lex(char str[], char* out) {
+    Error err = SUCCESS;
+    char val;
+    size_t size;
+
+    for (char* i = str; *i; i++) {
+        if (isdigit(*i)) {
+            try_val(i, &val, &size, &err);
+
+            if (err != SUCCESS)
+                return err;
+
+            strncat(out, i, size);
+            continue;
         }
+
+        if (isop(*i)) {
+            strncat(out, i, 0);
+            continue;
+        }
+
+        return ERR_ILLEGAL_INPUT;
     }
 
     return err;
