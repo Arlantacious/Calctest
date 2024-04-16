@@ -27,4 +27,8 @@ void push(Stack* stack, Token data);
 
 Token* pop(Stack* stack, int depth);
 
+void init_stack(Stack* stack);
+
+void free_stack(Stack* stack);
+
 #endif
