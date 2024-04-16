@@ -5,14 +5,12 @@
 
 typedef enum {
     SUCCESS = 0,
-    ERR_ILLEGAL_INPUT = 1
-} Error;
+    ERROR_ILLEGAL_INPUT = 1
+} ERROR;
 
 typedef struct {
-    union {
-        char op;
-        double val;
-    };
+    float val;
+    char lit;
 } Token;
 
 struct Node {

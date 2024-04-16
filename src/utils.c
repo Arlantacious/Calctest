@@ -23,6 +23,7 @@ Token* pop(Stack* stack, int init_depth) {
     Token* data = &tmp->data;
     stack->top = tmp->next;
     free(tmp);
+
     return data;
 }
 

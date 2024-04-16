@@ -3,6 +3,6 @@
 
 #include "utils.h"
 
-Error lex(char str[], char* out);
+ERROR lex(char str[], Stack* out);
 
 #endif
