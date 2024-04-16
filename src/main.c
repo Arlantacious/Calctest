@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include "lexer.h"
 
@@ -7,6 +8,7 @@
 int main(void) {
     Stack out;
     ERROR err = lex(TEST_INPUT, &out);
+    Token current;
 
     return err;
 }

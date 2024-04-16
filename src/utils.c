@@ -2,27 +2,27 @@
 #include <string.h>
 #include "utils.h"
 
-void push(Stack* stack, Token data) {
+void push(Stack* src, Token data) {
     struct Node* node = malloc(sizeof(struct Node));
     node->data = data;
-    stack->top = node;
+    src->top = node;
 }
 
-Token* pop(Stack* stack, int init_depth) {
-    if (init_depth == -1) {
-        stack->top = stack->top->prev;
-        return &stack->top->data;
+Token* pop(Stack* src, int depth) {
+    if (depth == -1) {
+        src->top = src->top->prev;
+
+        return &src->top->data;
     }
 
-    struct Node* tmp = stack->top;
+    struct Node tmp = *src->top;
 
-    for (int depth = init_depth; depth > 0; depth--) {
-        tmp = tmp->prev;
+    for (; depth > 0; depth--) {
+        tmp = *tmp.prev;
     }
 
-    Token* data = &tmp->data;
-    stack->top = tmp->next;
-    free(tmp);
+    Token* data = &tmp.data;
+    src->top = tmp.next;
 
     return data;
 }
