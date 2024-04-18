@@ -1,6 +1,12 @@
 #include <stdlib.h>
 #include "utils.h"
 
+int isempty(Stack* src) {
+    if (src->top->next == NULL)
+        return 1;
+    return 0;
+}
+
 void push(Stack* src, Token data) {
     struct Node* node = malloc(sizeof(struct Node));
     node->data = data;
@@ -8,19 +14,20 @@ void push(Stack* src, Token data) {
     src->top = node;
 }
 
-Token* pop(Stack* src, int depth) {
+Token pop(Stack* src, int depth) {
     if (depth == -1) {
         struct Node* tmp = src->top;
         src->top = src->top->prev;
-        Token* data = &(tmp->data);
+        Token data = tmp->data;
         free(tmp);
         return data;
     }
 
     struct Node* tmp = src->top;
 
-    for (; depth > 0; depth--) {
+    while (depth > 0) {
         tmp = tmp->prev;
+        depth--;
     }
 
     struct Node* next_node = tmp->prev;
@@ -29,8 +36,7 @@ Token* pop(Stack* src, int depth) {
     if (next_node != NULL)
         next_node->next = tmp->next;
 
-    free(tmp);
-    return data;
+    return *data;
 }
 
 void init_stack(Stack* stack) {

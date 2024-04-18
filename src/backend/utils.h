@@ -6,11 +6,19 @@
 typedef enum {
     SUCCESS = 0,
     ERROR_ILLEGAL_INPUT = 1
-} ERROR;
+} Error;
+
+typedef enum {
+    VALUE,
+    ADD,
+    SUBTRACT,
+    MULTIPLY,
+    DIVIDE
+} Token_ID;
 
 typedef struct {
     float val;
-    char lit;
+    Token_ID id;
 } Token;
 
 struct Node {
@@ -23,9 +31,11 @@ typedef struct {
     struct Node* top;
 } Stack;
 
+int isempty(Stack* stack);
+
 void push(Stack* stack, Token data);
 
-Token* pop(Stack* stack, int depth);
+Token pop(Stack* stack, int depth);
 
 void init_stack(Stack* stack);
 
