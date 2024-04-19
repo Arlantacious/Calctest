@@ -2,7 +2,7 @@
 #include "utils.h"
 
 int isempty(Stack* src) {
-    if (src->top->next == NULL)
+    if (src->top == NULL)
         return 1;
     return 0;
 }

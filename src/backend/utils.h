@@ -1,8 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#define BUF_SIZE 64
-
 typedef enum {
     SUCCESS = 0,
     ERROR_ILLEGAL_INPUT = 1
@@ -13,7 +11,8 @@ typedef enum {
     ADD,
     SUBTRACT,
     MULTIPLY,
-    DIVIDE
+    DIVIDE,
+    END
 } Token_ID;
 
 typedef struct {
