@@ -34,7 +34,7 @@ int isempty(Stack* stack);
 
 void push(Stack* stack, Token data);
 
-Token pop(Stack* stack, int depth);
+Token pop(Stack* stack);
 
 void init_stack(Stack* stack);
 

@@ -14,29 +14,12 @@ void push(Stack* src, Token data) {
     src->top = node;
 }
 
-Token pop(Stack* src, int depth) {
-    if (depth == -1) {
-        struct Node* tmp = src->top;
-        src->top = src->top->prev;
-        Token data = tmp->data;
-        free(tmp);
-        return data;
-    }
-
+Token pop(Stack* src) {
     struct Node* tmp = src->top;
-
-    while (depth > 0) {
-        tmp = tmp->prev;
-        depth--;
-    }
-
-    struct Node* next_node = tmp->prev;
-    Token* data = &(tmp->data);
-
-    if (next_node != NULL)
-        next_node->next = tmp->next;
-
-    return *data;
+    src->top = src->top->prev;
+    Token data = tmp->data;
+    free(tmp);
+    return data;
 }
 
 void init_stack(Stack* stack) {
