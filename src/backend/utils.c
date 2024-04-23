@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "utils.h"
 
+unsigned char flags;
+
 int isempty(Stack* src) {
     if (src->top == NULL)
         return 1;
