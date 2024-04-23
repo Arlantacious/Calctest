@@ -1,42 +1,43 @@
 #include <stdlib.h>
+#include <assert.h>
 #include "utils.h"
 
-unsigned char flags;
 
-int isempty(Stack* src) {
-    if (src->top == NULL)
-        return 1;
-    return 0;
+void init_stack(struct stack* s) {
+    s->top = NULL;
 }
 
-void push(Stack* src, Token data) {
-    struct Node* node = malloc(sizeof(struct Node));
+
+void push(struct stack* s, struct token data) {
+    assert(s != NULL);
+    struct node* node = malloc(sizeof(struct node));
+    assert(node != NULL);
     node->data = data;
-    node->prev = src->top;
-    src->top = node;
+    node->prev = s->top;
+    s->top = node;
 }
 
-Token pop(Stack* src) {
-    struct Node* tmp = src->top;
-    src->top = src->top->prev;
-    Token data = tmp->data;
-    free(tmp);
+
+struct token pop(struct stack* s) {
+    assert(s != NULL);
+    struct token data = s->top->data;
+    s->top = s->top->prev;
     return data;
 }
 
-void init_stack(Stack* stack) {
-    stack->top = NULL;
+
+int isempty(struct stack* s) {
+    assert(s != NULL);
+    return s->top == NULL;
 }
 
-void free_stack(Stack* stack) {
-    struct Node* current = stack->top;
 
-    while (current != NULL) {
-        struct Node* next = current->prev;
-        free(current);
-        current = next;
+void free_stack(struct stack* s) {
+    while (s->top != NULL) {
+        struct node* next = s->top->prev;
+        free(s->top);
+        s->top = next;
     }
 
-    stack->top = NULL;
+    assert(s->top == NULL);
 }
-

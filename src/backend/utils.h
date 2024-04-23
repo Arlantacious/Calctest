@@ -2,61 +2,57 @@
 #define UTILS_H
 
 
-#define SUCCESS 0
-#define ILLEGAL_IN 1
-
-
-typedef struct {
-    unsigned char success : 1;
-    unsigned char operator_subceeds_operator : 1;
-    unsigned char operand_subceeds_operand : 1;
-    unsigned char unclosed_paren : 1;
-    unsigned char subceeds_min_flt : 1;
-    unsigned char exceeds_max_flt : 1;
-} err;
-
-
-#define FLOAT 0x01
+#define FLT 0x01
 
 #define IS_OPERAND(x) (x & FLT)
 
 
-#define ADDITION        0x02
-#define SUBTRACTION     0x03
-#define MULTIPLICATION  0x04
-#define DIVISION        0x05
-#define MODULOS         0x06
-#define EXPONENTIATION  0x07
+#define ADD 0x02
+#define SUB 0x04
+#define MUL 0x08
+#define DIV 0x10
+#define MOD 0x20
+#define EXP 0x40
 
-#define IS_OPERATOR(x) (x & ADD || x & SUB || x & MUL || x & DIV || x & MODULOS || x & EXPONENTIATION )
+#define IS_OPERATOR(x) (x & ADD || x & SUB || x & MUL || x & DIV || x & MOD || x & EXP )
 
 
 typedef struct {
+    unsigned success : 1;
+    unsigned operator_subceeds_operator : 1;
+    unsigned operand_subceeds_operand : 1;
+    unsigned unclosed_paren : 1;
+    unsigned subceeds_min_flt : 1;
+    unsigned exceeds_max_flt : 1;
+} err;
+
+
+struct token {
     float val;
     unsigned char id;
-} token;
-
-
-struct node {
-    node* next;
-    node* prev;
-    token data;
 };
 
 
-typedef struct {
-    struct Node* top;
-} stack;
+struct node {
+    struct node* next;
+    struct node* prev;
+    struct token data;
+};
 
 
-void init_stack(stack* stack);
+struct stack {
+    struct node* top;
+};
 
-void free_stack(stack* stack);
 
-void push(stack* stack, token data);
+void s_init(struct stack* stack);
 
-token pop(stack* stack);
+void s_push(struct stack* stack, struct token data);
 
-int isempty(stack* stack);
+struct token s_pop(struct stack* stack);
+
+int s_isempty(struct stack* stack);
+
+void s_free(struct stack* stack);
 
 #endif
