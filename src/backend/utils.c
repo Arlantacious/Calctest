@@ -1,14 +1,12 @@
-#include <stdlib.h>
-#include <assert.h>
 #include "utils.h"
 
 
-void init_stack(struct stack* s) {
+void stack_init(struct stack* s) {
     s->top = NULL;
 }
 
 
-void push(struct stack* s, struct token data) {
+void stack_push(struct stack* s, struct token data) {
     assert(s != NULL);
     struct node* node = malloc(sizeof(struct node));
     assert(node != NULL);
@@ -18,7 +16,7 @@ void push(struct stack* s, struct token data) {
 }
 
 
-struct token pop(struct stack* s) {
+struct token stack_pop(struct stack* s) {
     assert(s != NULL);
     struct token data = s->top->data;
     s->top = s->top->prev;
@@ -26,13 +24,13 @@ struct token pop(struct stack* s) {
 }
 
 
-int isempty(struct stack* s) {
+int stack_is_empty(struct stack* s) {
     assert(s != NULL);
     return s->top == NULL;
 }
 
 
-void free_stack(struct stack* s) {
+void stack_free(struct stack* s) {
     while (s->top != NULL) {
         struct node* next = s->top->prev;
         free(s->top);

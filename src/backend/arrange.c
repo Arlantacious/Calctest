@@ -1,65 +1,32 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <assert.h>
 #include "arrange.h"
-#include "utils.h"
 
-char* geterrmsg[] = {
-    [SUCCESS] = "success",
-    [ERROR_ILLEGAL_INPUT] = "illegal input"
-};
+int arrange(struct token in[]) {
+    int err = SUCCESS;
+    struct stack out;
+    struct stack ops;
 
-char* gettokenid[] = {
-    [0] = "VALUE",
-    [1] = "ADD",
-    [2] = "SUBTRACT",
-    [3] = "MULTIPLY",
-    [4] = "DIVIDE",
-    [5] = "END"
-};
+    stack_init(&out);
+    stack_init(&ops);
 
-char* getopsymbol[] = {
-    [1] = "+",
-    [2] = "-",
-    [3] = "*",
-    [4] = "/",
-};
-
-int isprec(Token op1, Token op2) {
-   if (op1.id == ADD || op1.id == SUBTRACT)
-        if (op2.id == MULTIPLY || op2.id == DIVIDE)
-            return 1;
-   return 0;
-}
-
-char* arrange(Token in[]) {
-    Error err = SUCCESS;
-    Stack out;
-    Stack ops;
-
-    init_stack(&out);
-    init_stack(&ops);
-
-    for (Token* src = in; src->id != END; src++) {
-        if (src->id == VALUE) {
-            push(&out, *src);
+    for (struct token* src = in; src != NULL; src++) {
+        if (TOKEN_EVALUATE_TYPE(*src)) {
+            stack_push(&out, *src);
             continue;
         }
 
-        if (isempty(&ops) || !isprec(*src, ops.top->data)) {
-            push(&ops, *src);
+        if (stack_is_empty(&ops) || !TOKEN_COMPARE_PRECEDENCE(*src, ops.top->data)) {
+            stack_push(&ops, *src);
             continue;
         }
 
-        while (!isempty(&ops) && isprec(ops.top->data, *src))
-            push(&out, pop(&ops));
+        while (~stack_is_empty(&ops) & TOKEN_COMPARE_PRECEDENCE(ops.top->data, *src))
+            stack_push(&out, stack_pop(&ops));
         
-        push(&ops, *src);
+        stack_push(&ops, *src);
     }
 
-    while (!isempty(&ops))
-        push(&out, pop(&ops));
+    while (!stack_is_empty(&ops))
+        stack_push(&out, stack_pop(&ops));
       
-     return geterrmsg[err];
+     return err;
  }

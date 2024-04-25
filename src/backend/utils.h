@@ -2,36 +2,27 @@
 #define UTILS_H
 
 
-#define FLT 0x01
-
-#define IS_OPERAND(x) (x & FLT)
-
-
-#define ADD 0x02
-#define SUB 0x04
-#define MUL 0x08
-#define DIV 0x10
-#define MOD 0x20
-#define EXP 0x40
-
-#define IS_OPERATOR(x) (x & ADD || x & SUB || x & MUL || x & DIV || x & MOD || x & EXP )
+#include <stdlib.h>
+#include <assert.h>
 
 
-typedef struct {
-    unsigned success : 1;
-    unsigned operator_subceeds_operator : 1;
-    unsigned operand_subceeds_operand : 1;
-    unsigned unclosed_paren : 1;
-    unsigned subceeds_min_flt : 1;
-    unsigned exceeds_max_flt : 1;
-} err;
+#define VALUE 0
 
+#define ADD 1
+#define SUBTRACTION 2
+#define MULTIPLICATION 3
+#define DIVISION 4
+#define MODULUS 5
+#define EXPONENTATION 6
+
+#define TOKEN_EVALUATE_TYPE(a) ((a).type == (VALUE))
+
+#define TOKEN_COMPARE_PRECEDENCE(a, b) (3)
 
 struct token {
     float val;
-    unsigned char id;
+    int type;
 };
-
 
 struct node {
     struct node* next;
@@ -39,20 +30,29 @@ struct node {
     struct token data;
 };
 
-
 struct stack {
     struct node* top;
 };
 
 
-void s_init(struct stack* stack);
+#define SUCCESS 0
 
-void s_push(struct stack* stack, struct token data);
+#define OPERATOR_FOLLOWED_BY_OPERATOR 1
+#define OPERAND_FOLLOWED_BY_OPERAND 2
+#define UNCLOSED_PARENTHESIS 3
+#define LESS_THAN_MIN_FLOAT 4
+#define GREATER_THAN_MAX_FLOAT 5
 
-struct token s_pop(struct stack* stack);
 
-int s_isempty(struct stack* stack);
+void stack_init(struct stack* stack);
 
-void s_free(struct stack* stack);
+void stack_push(struct stack* stack, struct token data);
+
+struct token stack_pop(struct stack* stack);
+
+int stack_is_empty(struct stack* stack);
+
+void stack_free(struct stack* stack);
+
 
 #endif
