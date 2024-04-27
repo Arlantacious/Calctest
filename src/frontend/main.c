@@ -2,50 +2,72 @@
 #include "../backend/arrange.h"
 #include "../backend/utils.h"
 
+
 int main(void) {
-    Token t1;
-    t1.val = 1;
-    t1.id = VALUE;
+        Token t1 = {1, VAL}; 
+        Token t2 = {0, ADD};
+        Token t3 = {2, VAL};
+        Token t4 = {0, SUB};
+        Token t5 = {3, VAL};
+        Token t6 = {0, MUL};
+        Token t7 = {4, VAL};
+        Token t8 = {0, DIV};
+        Token t9 = {5, VAL};
+        Token t10 = {0, END};
 
-    Token t2;
-    t2.val = 0;
-    t2.id = ADD;
+        Token test_src[] = { t1, t2, t3, t4, t5, t6, t7, t8, t9, t10 };
 
-    Token t3;
-    t3.val = 2;
-    t3.id = VALUE;
+        Stack arranged_src; 
+        stack_init(&arranged_src); 
 
-    Token t4;
-    t4.val = 0;
-    t4.id = SUBTRACT;
+        Exit_Code exit_code = arrange(test_src, &arranged_src); 
 
-    Token t5;
-    t5.val = 3;
-    t5.id = VALUE;
+        #define MAX_TOKENS 10
 
-    Token t6;
-    t6.val = 0;
-    t6.id = MULTIPLY;
+        Token ordered_src[MAX_TOKENS]; 
+        int token_count = 0;
 
-    Token t7;
-    t7.val = 4;
-    t7.id = VALUE;
+        while (!stack_is_empty(&arranged_src) && token_count < MAX_TOKENS)
+        {
+                ordered_src[token_count] = stack_pop(&arranged_src);
+                token_count++; 
+        }
 
-    Token t8;
-    t8.val = 0;
-    t8.id = DIVIDE;
+        for (int i = 0; i < token_count; i++)
+        {
+                if (ordered_src[i].id == VAL)
+                { 
+                        printf("Value: %f\n", ordered_src[i].val);
+                } else
+                {
+                        printf("Operator ID: %d\n", ordered_src[i].id); 
+                }
+        }
+        
+        char* get_id_lit[] =
+        {
+                [ADD] = "+",
+                [SUB] = "-",
+                [MUL] = "*",
+                [DIV] = "/",
+                [MOD] = "%",
+                [EXP] = "^"
+        };
+        
+        printf("literal: ");
 
-    Token t9;
-    t9.val = 5;
-    t9.id = VALUE;
+        for (int i = 0; i < token_count; i++)
+        {
+                if (ordered_src[i].id == VAL)
+                {
+                        printf("%d", (int)ordered_src[i].val);
+                } else
+                {
+                        printf("%s", get_id_lit[ordered_src[i].id]);
+                }
+        }
 
-    Token end;
-    end.val = 0;
-    end.id = END;
+        fprintf(stderr, "Exit code: %d\n", exit_code); 
 
-    Token testin[] = { t1, t2, t3, t4, t5, t6, t7, t8, t9, end };
-    char* errmsg = arrange(testin);
-
-    fprintf(stderr, "exit: %s\n", errmsg);
-    return 0;
+        return 0; 
 }

@@ -6,53 +6,61 @@
 #include <assert.h>
 
 
-#define VALUE 0
+typedef enum
+{
+        END,
+        VAL,
+        ADD,
+        SUB,
+        MUL,
+        DIV,
+        MOD,
+        EXP
+} Token_ID;
 
-#define ADD 1
-#define SUBTRACTION 2
-#define MULTIPLICATION 3
-#define DIVISION 4
-#define MODULUS 5
-#define EXPONENTATION 6
+typedef enum
+{
+        OP_FOLLOWED_BY_OP = -4,
+        VAL_FOLLOWED_BY_VAL = -3,
+        VAL_EXCEEDS_LIMIT = -2,
+        UNCLOSED_PAREN = -1,
+        SUCCESS = 0,
+        SAFE_FAIL = 1,
+} Exit_Code;
 
-#define TOKEN_EVALUATE_TYPE(a) ((a).type == (VALUE))
 
-#define TOKEN_COMPARE_PRECEDENCE(a, b) (3)
-
-struct token {
+typedef struct
+{
     float val;
-    int type;
+    Token_ID id;
+} Token;
+
+struct Node
+{
+    struct Node* next;
+    struct Node* prev;
+    Token data;
 };
 
-struct node {
-    struct node* next;
-    struct node* prev;
-    struct token data;
-};
-
-struct stack {
-    struct node* top;
-};
+typedef struct
+{
+    struct Node* top;
+} Stack;
 
 
-#define SUCCESS 0
+int token_eval_id(Token_ID id);
 
-#define OPERATOR_FOLLOWED_BY_OPERATOR 1
-#define OPERAND_FOLLOWED_BY_OPERAND 2
-#define UNCLOSED_PARENTHESIS 3
-#define LESS_THAN_MIN_FLOAT 4
-#define GREATER_THAN_MAX_FLOAT 5
+int token_cmp_prec(Token_ID stack_id, Token_ID current_id);
 
+void stack_init(Stack* stack);
 
-void stack_init(struct stack* stack);
+void stack_push(Stack* stack, Token data);
 
-void stack_push(struct stack* stack, struct token data);
+Token stack_pop(Stack* stack);
 
-struct token stack_pop(struct stack* stack);
+int stack_is_empty(Stack* stack);
 
-int stack_is_empty(struct stack* stack);
-
-void stack_free(struct stack* stack);
+void stack_free(Stack* stack);
 
 
 #endif
