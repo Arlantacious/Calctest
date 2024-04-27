@@ -6,11 +6,9 @@ int token_eval_id(Token_ID id)
         return id == VAL;
 }
 
-int  token_cmp_prec(Token_ID stack_id, Token_ID current_id) 
+int  token_cmp_prec(int stack_prec, int current_prec) 
 {
-        return
-        (stack_id < MUL && current_id > MUL) || 
-        (stack_id < EXP && current_id > EXP);
+        return current_prec >= stack_prec;
 }
 
 void stack_init(Stack* stack)

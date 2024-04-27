@@ -8,14 +8,14 @@
 
 typedef enum
 {
-        END = -1,
-        VAL = 0,
-        ADD = 1,
-        SUB = 2,
-        MUL = 3,
-        DIV = 4,
-        MOD = 5,
-        EXP = 6
+        END,
+        VAL,
+        ADD,
+        SUB,
+        MUL,
+        DIV,
+        MOD,
+        EXP
 } Token_ID;
 
 typedef enum
@@ -25,7 +25,6 @@ typedef enum
         VAL_EXCEEDS_LIMIT = -2,
         UNCLOSED_PAREN = -1,
         SUCCESS = 0,
-        SAFE_FAIL = 1
 } Exit_Code;
 
 
@@ -33,7 +32,6 @@ typedef struct
 {
     float val;
     Token_ID id;
-    int prec;
 } Token;
 
 struct Node

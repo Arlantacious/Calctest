@@ -1,7 +1,7 @@
 #include "arrange.h"
 
 
-Exit_Code handle_val(Token token, Stack* out)
+Exit_Code resolve_val(Token token, Stack* out)
 {
         if (token_eval_id(token.id))
         {
@@ -13,32 +13,13 @@ Exit_Code handle_val(Token token, Stack* out)
         return SAFE_FAIL;
 }
 
-Exit_Code resolve_high_prec(Token token, Stack* ops)
+Exit_Code resolve_op(Token token, Stack* out,  Stack* ops)
 {
-        if (stack_is_empty(ops) || token_cmp_prec(ops->top->data.id, token.id))
-        {
-                stack_push(ops, token);
-        
-                return SUCCESS;
-        }
-
-        return SAFE_FAIL;
-
-
-}
-
-Exit_Code resolve_low_prec(Token token, Stack* out,  Stack* ops)
-{
-        while (!stack_is_empty(ops) && !token_cmp_prec(token.id, ops->top->data.id))
+        while (!stack_is_empty(ops) && token_cmp_prec(token.prec, ops->top->data.prec))
         {
                 stack_push(out, stack_pop(ops));
         }
 
-        return SUCCESS;
-}
-
-Exit_Code resolve_push(Token token, Stack* ops)
-{
         stack_push(ops, token);
 
         return SUCCESS;
@@ -70,21 +51,19 @@ Exit_Code arrange(Token src[], Stack* arranged_src)
 
         for (Token* token = src; token->id != END; token++)
         {
-                err = handle_val(*token, &out);
+                err = resolve_val(*token, &out);
 
                 if (err < 0)
                 {
                         return err;
                 }
 
-                err = resolve_low_prec(*token, &out, &ops);
-
-                if (err < 0)
+                if (err == SUCCESS)
                 {
-                        return err;
+                        continue;
                 }
 
-                err = resolve_high_prec(*token, &ops);
+                err = resolve_op(*token, &out, &ops);
 
                 if (err < 0)
                 {

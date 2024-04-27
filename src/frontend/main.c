@@ -4,70 +4,88 @@
 
 
 int main(void) {
-        Token t1 = {1, VAL}; 
-        Token t2 = {0, ADD};
-        Token t3 = {2, VAL};
-        Token t4 = {0, SUB};
-        Token t5 = {3, VAL};
-        Token t6 = {0, MUL};
-        Token t7 = {4, VAL};
-        Token t8 = {0, DIV};
-        Token t9 = {5, VAL};
-        Token t10 = {0, END};
 
-        Token test_src[] = { t1, t2, t3, t4, t5, t6, t7, t8, t9, t10 };
+    char* get_lit[] =
+    {
+            [ADD] = "+",
+            [SUB] = "-",
+            [MUL] = "*",
+            [DIV] = "/",
+            [MOD] = "%",
+            [EXP] = "^"
+    };
 
-        Stack arranged_src; 
-        stack_init(&arranged_src); 
+    Token t1 = {1, VAL, 0}; 
+    Token t2 = {0, ADD, 1};
+    Token t3 = {2, VAL, 0};
+    Token t4 = {0, SUB, 1};
+    Token t5 = {3, VAL, 0};
+    Token t6 = {0, MUL, 2};
+    Token t7 = {4, VAL, 0};
+    Token t8 = {0, DIV, 2};
+    Token t9 = {5, VAL, 0};
+    Token t10 = {0, MOD, 3};
+    Token t11 = {6, VAL, 0};
+    Token t12 = {0, EXP, 4};
+    Token t13 = {7, VAL, 0};
+    Token t14 = {0, END, 0};
 
-        Exit_Code exit_code = arrange(test_src, &arranged_src); 
+    Token test_src[] = { t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14 };
 
-        #define MAX_TOKENS 10
+    Stack arranged_src; 
+    stack_init(&arranged_src); 
 
-        Token ordered_src[MAX_TOKENS]; 
-        int token_count = 0;
+    Exit_Code exit_code = arrange(test_src, &arranged_src); 
 
-        while (!stack_is_empty(&arranged_src) && token_count < MAX_TOKENS)
-        {
-                ordered_src[token_count] = stack_pop(&arranged_src);
-                token_count++; 
+    #define MAX_TOKENS 14
+
+    Token ordered_src[MAX_TOKENS]; 
+    int token_count = 0;
+    
+    printf("input: ");
+    
+    for (int i = 0; test_src[i].id != END; i++)
+    {
+           if (test_src[i].id == VAL)
+           {
+                printf("%d", (int)test_src[i].val);
+                continue;
+        }
+        printf("%s", get_lit[test_src[i].id]);
+    }
+
+    printf("\n");
+
+    while (!stack_is_empty(&arranged_src) && token_count < MAX_TOKENS)
+    {
+        ordered_src[token_count] = stack_pop(&arranged_src);
+        token_count++; 
+    }
+
+    for (int i = token_count - 1; i >= 0; i--)
+    {
+        if (ordered_src[i].id == VAL)
+        { 
+            printf("Value: %f\n", ordered_src[i].val);
+            continue;
         }
 
-        for (int i = 0; i < token_count; i++)
+        printf("Operator ID: %d\n", ordered_src[i].id); 
+    }
+
+    printf("literal: ");
+
+    for (int i = token_count - 1; i >= 0; i--)
+    {
+        if (ordered_src[i].id == VAL)
         {
-                if (ordered_src[i].id == VAL)
-                { 
-                        printf("Value: %f\n", ordered_src[i].val);
-                } else
-                {
-                        printf("Operator ID: %d\n", ordered_src[i].id); 
-                }
+            printf("%d", (int)ordered_src[i].val);
+            continue;
         }
-        
-        char* get_id_lit[] =
-        {
-                [ADD] = "+",
-                [SUB] = "-",
-                [MUL] = "*",
-                [DIV] = "/",
-                [MOD] = "%",
-                [EXP] = "^"
-        };
-        
-        printf("literal: ");
+        printf("%s", get_lit[ordered_src[i].id]);
+    }
 
-        for (int i = 0; i < token_count; i++)
-        {
-                if (ordered_src[i].id == VAL)
-                {
-                        printf("%d", (int)ordered_src[i].val);
-                } else
-                {
-                        printf("%s", get_id_lit[ordered_src[i].id]);
-                }
-        }
-
-        fprintf(stderr, "Exit code: %d\n", exit_code); 
-
-        return 0; 
+    printf("\nexit code: %d\n", exit_code);
+    stack_free(&arranged_src);
+    return 0; 
 }
