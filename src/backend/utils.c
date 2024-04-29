@@ -28,7 +28,6 @@ void stack_push(Stack* stack, Token data)
 
 Token stack_pop(Stack* stack)
 {
-        assert(stack != NULL);
         assert(stack->top != NULL);
         Token tmp = stack->top->data;
         stack->top = stack->top->prev;

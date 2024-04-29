@@ -1,7 +1,7 @@
 #include "arrange.h"
 
 
-Exit_Code resolve_val(Token token, Stack* out)
+static Exit_Code resolve_val(Token token, Stack* out)
 {
         if (token_eval_id(token.id))
         {
@@ -13,7 +13,7 @@ Exit_Code resolve_val(Token token, Stack* out)
         return SAFE_FAIL;
 }
 
-Exit_Code resolve_op(Token token, Stack* out,  Stack* ops)
+static Exit_Code resolve_op(Token token, Stack* out,  Stack* ops)
 {
         while (!stack_is_empty(ops) && token_cmp_prec(token.prec, ops->top->data.prec))
         {
@@ -37,12 +37,10 @@ Exit_Code resolve_final(Stack* out, Stack* ops)
 
 Exit_Code arrange(Token src[], Stack* arranged_src)
 {
-        assert(arranged_src != NULL);
-
         Exit_Code err = SUCCESS;
+ 
         Stack out;
         Stack ops;
-
         stack_init(&out);
         stack_init(&ops);
 
