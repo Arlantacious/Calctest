@@ -5,7 +5,7 @@
 #include "utils.h"
 
 
-Exit_Code process(Stack* src);
+Exit_Code process(Stack* src, float* answer);
 
 
 #endif

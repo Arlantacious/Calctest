@@ -4,20 +4,7 @@
 #include "../backend/utils.h"
 
 
-#define MAX_TOKENS 14
-
-
 int main(void) {
-
-        char* get_lit[] =
-        {
-                [ADD] = "+",
-                [SUB] = "-",
-                [MUL] = "*",
-                [DIV] = "/",
-                [MOD] = "%",
-                [EXP] = "^"
-        };
 
         Token t1 = {1, VAL, 0};
         Token t2 = {0, ADD, 1};
@@ -35,54 +22,28 @@ int main(void) {
         Token t14 = {0, END, 0};
 
         Token test_src[] = { t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14 };
-                        
+        
+        Exit_Code exit_code = SUCCESS;
+
         Stack arranged_src; 
         stack_init(&arranged_src); 
 
-        Exit_Code exit_code = arrange(test_src, &arranged_src); 
-        
-        Stack arranged_src_cpy = arranged_src;
-
-        //float answer = process(&arranged_src_cpy);
-
-
-
-        Token ordered_src[MAX_TOKENS]; 
-        int token_count = 0;
+        exit_code = arrange(test_src, &arranged_src);  
 
         printf("input: ");
-
-        for (int i = 0; test_src[i].id != END; i++)
-        {
-                if (test_src[i].id == VAL)
-                {
-                        printf("%d", (int)test_src[i].val);
-                        continue;
-                }
-                printf("%s", get_lit[test_src[i].id]);
-        }
-
-        while (!stack_is_empty(&arranged_src) && token_count < MAX_TOKENS)
-        {
-                ordered_src[token_count] = stack_pop(&arranged_src);
-                token_count++; 
-        }
- 
-        printf("\noutput: ");
-
-        for (int i = token_count - 1; i >= 0; i--)
-        {
-                if (ordered_src[i].id == VAL)
-                {
-                        printf("%d", (int)ordered_src[i].val);
-                        continue;
-                }
-                printf("%s", get_lit[ordered_src[i].id]);
-        }
         
-        //printf("\nanswer: %f", answer);
+        debug_print_tokens(test_src);
+     
+        printf("output: ");
 
-        printf("\nexit: %d\n", exit_code);
+        debug_print_stack(arranged_src);
+        
+        float answer;
+        exit_code = process(&arranged_src, &answer);
+        
+        printf("answer: %f\n", answer);
+
+        printf("exit: %d\n", exit_code);
 
         return 0; 
 }

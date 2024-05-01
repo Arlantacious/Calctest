@@ -3,8 +3,9 @@
 static Exit_Code resolve_val(Stack* src, Stack* out)
 {
         if (token_eval_id(src->top->data.id))
-        {       
+        {
                 stack_push(out, stack_pop(src));
+                assert(!stack_is_empty(out));
 
                 return SUCCESS;
         }
@@ -13,15 +14,17 @@ static Exit_Code resolve_val(Stack* src, Stack* out)
 }
 
 static Exit_Code resolve_op(Stack* src, Stack* out)
-{
+{ 
+        assert(token_eval_id(!src->top->data.id));
+        assert(!stack_is_empty(src));
+        assert(!stack_is_empty(out));
+
         Token op = stack_pop(src);
+
         Token rval = stack_pop(out);
+
         Token lval = stack_pop(out);
-        
-        assert(!token_eval_id(rval.id));
-        assert(token_eval_id(rval.id));
-        assert(token_eval_id(rval.id));
-        
+       
         float final = 0.0;
 
         switch (op.id)
@@ -49,8 +52,6 @@ static Exit_Code resolve_op(Stack* src, Stack* out)
                 default:
                         break;
         }
-        
-        printf("data: %f\n", final);
 
         Token data = {final, VAL, 0};
         
@@ -59,19 +60,24 @@ static Exit_Code resolve_op(Stack* src, Stack* out)
         return SUCCESS;
 }
 
-Exit_Code process(Stack* src) {
+Exit_Code process(Stack* src, float* answer) {
         Exit_Code err = SUCCESS;
-        
         Stack out;
         stack_init(&out);
-        
-        while (src->top != NULL)
+
+
+        while (!stack_is_empty(src))
         {
                 err = resolve_val(src, &out);
-
+               
                 if (err < 0)
                 {
                         return err;
+                }
+
+                if (err == SUCCESS)
+                {
+                        continue;
                 }
 
                 err = resolve_op(src, &out);
@@ -81,6 +87,8 @@ Exit_Code process(Stack* src) {
                         return err;
                 }
         }
-
+        
+        *answer = out.top->data.val;
+        
         return err;
 }

@@ -61,9 +61,15 @@ void stack_push(Stack* stack, Token data);
 
 Token stack_pop(Stack* stack);
 
+void stack_reverse(Stack* stack);
+
 int stack_is_empty(Stack* stack);
 
 void stack_free(Stack* stack);
+
+void debug_print_tokens(Token* tokens);
+
+void debug_print_stack(Stack stack);
 
 
 #endif

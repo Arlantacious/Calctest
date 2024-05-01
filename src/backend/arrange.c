@@ -60,7 +60,7 @@ Exit_Code arrange(Token src[], Stack* arranged_src)
                 {
                         continue;
                 }
-
+                
                 err = resolve_op(*token, &out, &ops);
 
                 if (err < 0)
@@ -76,7 +76,8 @@ Exit_Code arrange(Token src[], Stack* arranged_src)
                 return err;
         }
         
+        stack_reverse(&out);
         *arranged_src = out;
-
+        
         return err;
 }
