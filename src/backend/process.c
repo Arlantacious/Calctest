@@ -65,7 +65,6 @@ Exit_Code process(Stack* src, float* answer) {
         Stack out;
         stack_init(&out);
 
-
         while (!stack_is_empty(src))
         {
                 err = resolve_val(src, &out);
