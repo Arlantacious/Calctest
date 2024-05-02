@@ -5,7 +5,7 @@
 #include "utils.h"
 
 
-int arrange(Token src[], Stack* arranged_src);
+int arrange(Stack* src, Stack* arranged_src);
 
 
 #endif

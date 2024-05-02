@@ -5,7 +5,12 @@
 
 
 int main(void) {
+        
+        Exit_Code exit_code = SUCCESS;
 
+        Stack arranged_src; 
+        stack_init(&arranged_src); 
+       
         Token t1 = {1, VAL, 0};
         Token t2 = {0, ADD, 1};
         Token t3 = {2, VAL, 0};
@@ -21,18 +26,29 @@ int main(void) {
         Token t13 = {7, VAL, 0};
         Token t14 = {0, END, 0};
 
-        Token test_src[] = { t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14 };
-        
-        Exit_Code exit_code = SUCCESS;
+        Stack test_src;
+        stack_init(&test_src);
 
-        Stack arranged_src; 
-        stack_init(&arranged_src); 
+        stack_push(&test_src, t14);
+        stack_push(&test_src, t13);
+        stack_push(&test_src, t12);
+        stack_push(&test_src, t11);
+        stack_push(&test_src, t10);
+        stack_push(&test_src, t9);
+        stack_push(&test_src, t8);
+        stack_push(&test_src, t7);
+        stack_push(&test_src, t6);
+        stack_push(&test_src, t5);
+        stack_push(&test_src, t4);
+        stack_push(&test_src, t3);
+        stack_push(&test_src, t2);
+        stack_push(&test_src, t1);
 
-        exit_code = arrange(test_src, &arranged_src);  
+        exit_code = arrange(&test_src, &arranged_src);  
 
         printf("input: ");
         
-        debug_print_tokens(test_src);
+        debug_print_stack(test_src);
      
         printf("output: ");
 

@@ -66,34 +66,6 @@ void stack_free(Stack* stack)
         assert(stack->top == NULL);
 }
 
-void debug_print_tokens(Token* tokens)
-{
-        static char* get_lit[] =
-        {
-                [ADD] = "+",
-                [SUB] = "-",
-                [MUL] = "*",
-                [DIV] = "/",
-                [MOD] = "%",
-                [EXP] = "^"
-        };
-        
-        printf("tokens: ");
-
-        for (; tokens->id != END; tokens++)
-        {
-                if (token_eval_id(tokens->id))
-                {
-                        printf("%d", (int)tokens->val);
-                        continue;
-                }
-
-                printf("%s", get_lit[tokens->id]);
-        }
-
-        printf("\n");
-}
-
 void debug_print_stack(Stack stack)
 {
         static char* get_lit[] =

@@ -35,7 +35,7 @@ Exit_Code resolve_final(Stack* out, Stack* ops)
         return SUCCESS;
 }
 
-Exit_Code arrange(Token src[], Stack* arranged_src)
+Exit_Code arrange(Stack* src, Stack* arranged_src)
 {
         Exit_Code err = SUCCESS;
  
@@ -46,10 +46,12 @@ Exit_Code arrange(Token src[], Stack* arranged_src)
 
         assert(out.top == NULL);
         assert(ops.top == NULL);
-
-        for (Token* token = src; token->id != END; token++)
-        {
-                err = resolve_val(*token, &out);
+        
+        while (!stack_is_empty(src))
+        {       
+                Token current = stack_pop(src);
+              
+                err = resolve_val(current, &out);
 
                 if (err < 0)
                 {
@@ -61,7 +63,7 @@ Exit_Code arrange(Token src[], Stack* arranged_src)
                         continue;
                 }
                 
-                err = resolve_op(*token, &out, &ops);
+                err = resolve_op(current, &out, &ops);
 
                 if (err < 0)
                 {
