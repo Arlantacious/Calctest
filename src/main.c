@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "../backend/arrange.h"
-#include "../backend/process.h"
-#include "../backend/utils.h"
-
+#include "backend/arrange.h"
+#include "backend/process.h"
+#include "backend/utils.h"
+#include "frontend/gui.h"
 
 int main(void) {
         
@@ -58,6 +58,6 @@ int main(void) {
         printf("answer: %f\n", answer);
 
         printf("exit: %d\n", exit_code);
-
+        gui(); 
         return 0; 
 }
