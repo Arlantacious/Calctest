@@ -59,5 +59,6 @@ int main(void) {
 
         printf("exit: %d\n", exit_code);
         gui(); 
+
         return 0; 
 }
