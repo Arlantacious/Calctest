@@ -3,9 +3,14 @@
 
 Component create_button(char* content, int x, int y)
 {
-        return (Component) { (Rectangle) { x, y, BUTTON_WIDTH, BUTTON_HEIGHT }, content, (Vector2) { x, y }, BUTTON_COLOR };
-}
+        Component button;
 
+        button.body = (Rectangle) { x, y, BUTTON_WIDTH, BUTTON_HEIGHT};
+        button.content = content;
+        button.color = BUTTON_COLOR;
+
+        return button;      
+}
 
 Component* create_buttons(void)
 {
@@ -33,11 +38,16 @@ Component* create_buttons(void)
         buttons[17] = create_button(".", 200, 500),
         buttons[18] = create_button("=", 300, 500),
         buttons[19] = create_button("C", 0, 500);
-    
+           
         return buttons;
 }
 
-Component* create_display(char* content, int x, int y)
+Component create_display(void)
 {
-        return &(Component) { (Rectangle) { x, y, DISPLAY_WIDTH, DISPLAY_HEIGHT }, content, (Vector2) { x, y }, DISPLAY_COLOR };
+        Component display;
+        display.body = (Rectangle) { DISPLAY_POSITION.x, DISPLAY_POSITION.y, DISPLAY_WIDTH, DISPLAY_HEIGHT };
+        display.content = malloc(sizeof(char) * DISPLAY_BUFFER_SIZE);
+        display.color = DISPLAY_COLOR;
+
+        return display;
 }

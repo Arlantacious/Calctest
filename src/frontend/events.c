@@ -1,13 +1,22 @@
+#include <string.h>
 #include "events.h"
 
 
-void button_lighting(Component* button, const Component* buttons)
+void button_click(Component* display, const Component* buttons, const Vector2 cursor)
+{
+        if (CheckCollisionPointRec(cursor, buttons[BUTTON_ZERO].body) && IsKeyPressed(KEY_SPACE))
+        {
+                strcat(display->content, "0");
+        }
+}
+
+void button_lighting(Component* button, const Component* buttons, const Vector2 cursor)
 {
         static Component* prev = NULL; 
-        Vector2 cur = GetMousePosition();
+     
         if (prev == NULL)
         {
-                if (CheckCollisionPointRec(cur, button->body))
+                if (CheckCollisionPointRec(cursor, button->body))
                 {
                         button->color = LIGHTGRAY;
                         prev = button;
@@ -18,13 +27,12 @@ void button_lighting(Component* button, const Component* buttons)
                 return;
         }
 
-        //IF ON SAME BUTTON
-        if (CheckCollisionPointRec(cur, prev->body))
+        if (CheckCollisionPointRec(cursor, prev->body))
         {
                 return;
         }
-        //IF CURSOR ON A BUTTON
-        if (CheckCollisionPointRec(cur, button->body) && prev != NULL)
+
+        if (CheckCollisionPointRec(cursor, button->body) && prev != NULL)
         {
                 button->color = LIGHTGRAY; 
                 prev->color = BUTTON_COLOR;
@@ -33,7 +41,7 @@ void button_lighting(Component* button, const Component* buttons)
 
         for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
         {
-                if (CheckCollisionPointRec(cur, buttons[i].body))
+                if (CheckCollisionPointRec(cursor, buttons[i].body))
                 {
                         return;
                 }
@@ -43,10 +51,12 @@ void button_lighting(Component* button, const Component* buttons)
         prev = NULL;
 }
 
-void event_listener(Component* buttons)
+void event_listener(Component* buttons, Component* display)
 {
         for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
         {
-                button_lighting(&buttons[i], buttons);
+                Vector2 cursor = GetMousePosition();
+                button_click(display, buttons, cursor);
+                button_lighting(&buttons[i], buttons, cursor);
         }
 }

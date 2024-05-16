@@ -5,7 +5,7 @@
 #include "utils.h"
 
 
-void event_listener(Component* buttons);
+void event_listener(Component* buttons, Component* display);
 
 
 #endif

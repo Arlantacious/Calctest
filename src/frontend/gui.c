@@ -11,16 +11,16 @@ void gui(void)
         SetTargetFPS(60);
 
         Component* buttons = create_buttons();
-        Component* display = create_display("", 0, 0);
+        Component display = create_display();
         
         while (!WindowShouldClose())
         {
-                event_listener(buttons);
+                event_listener(buttons, &display);
                 BeginDrawing();
-                ClearBackground(LIGHTGRAY);
+                ClearBackground(WINDOW_COLOR);
                 
                 draw_buttons(buttons);
-                draw_display(display);
+                draw_display(&display);
 
                 EndDrawing();
         }
